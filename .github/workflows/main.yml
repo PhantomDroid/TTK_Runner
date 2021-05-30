@@ -21,6 +21,12 @@ jobs:
         uses: rokibhasansagar/custom_workflows/ssh_keepalive@main
       - uses: rokibhasansagar/slimhub_actions@main
 
+      - name: Checks
+        run: |
+          echo -e "Current IP is $(curl -sL https://api.ipify.org)\n"
+          sudo apt-get -qq install -y net-tools
+          netstat -tulpn | grep LISTEN
+          
       - name: Complete Script
         run: |
           export TZ=Asia/Dhaka DEBIAN_FRONTEND=noninteractive
@@ -59,6 +65,7 @@ jobs:
           # Expose the localhost as ngrok external address
           screen -dmS ngproxy ngrok http 80 --log /tmp/ng.log --authtoken "${NGTTK_TOKEN}" --region eu
           export ServerAddr=$(grep "url=https" /tmp/ng.log | awk -F' url=' '{print $NF}')
+          echo -e "\nServer Address is ${ServerAddr}\n\n"
           sed -i 's|__SERVER__ADDRESS__|'"$ServerAddr"'|' tortoolkit/consts/ExecVarsSample.py
           chmod 777 alive.sh start.sh
           _randomSA() {
