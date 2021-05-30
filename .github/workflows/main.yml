@@ -1,6 +1,9 @@
 name: TTK CI
 
 on:
+  push:
+    paths:
+      - '.github/workflows/main.yml'
   workflow_dispatch:
 
 env:
@@ -57,7 +60,7 @@ jobs:
           mv RcloneSA4Phantom/accounts/* sa/ && rm -rf RcloneSA4Phantom
           ls sa/ > sa_list
           # Pip packages
-          echo "launchpadlib" >> requirements.txt
+          echo -e "\nlaunchpadlib" >> requirements.txt
           sudo -EH pip3 install --no-cache-dir -r requirements.txt
           curl -sL "${EXEC_VAR_FILE}" > tortoolkit/consts/ExecVarsSample.py
           # Expose port 80 with http.server
