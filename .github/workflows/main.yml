@@ -29,9 +29,7 @@ jobs:
           echo -e "Current IP is $(curl -sL https://api.ipify.org)\n"
           sudo apt-get -qq install -y net-tools
           netstat -tulpn | grep LISTEN
-          
-      - name: Complete Script
-        timeout-minutes: 340
+      - name: Prepare Apps
         run: |
           export TZ=Asia/Dhaka DEBIAN_FRONTEND=noninteractive
           sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt focal-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
@@ -72,10 +70,16 @@ jobs:
           chmod +x ngrok && sudo mv ngrok /usr/local/bin/
           screen -dmS ngproxy ngrok http 80 --log ngrok.log --authtoken "${NGTTK_TOKEN}" --region eu
           sleep 5s
+          chmod 777 alive.sh start.sh
           export ServerAddr=$(grep "url=https" ngrok.log | awk -F' url=' '{print $NF}')
           echo -e "\nServer Address is ${ServerAddr}\n\n"
           sed -i 's|__SERVER__ADDRESS__|'"$ServerAddr"'|' tortoolkit/consts/ExecVarsSample.py
-          chmod 777 alive.sh start.sh
+
+      - name: Complete Script
+        timeout-minutes: 340
+        run: |
+          cd /torapp
+          touch /tmp/LOOP
           _randomSA() {
             while true; do
               sed -i 's|__ServiceAcc__|'"$(shuf -n 1 sa_list)"'|' ~/.config/rclone/rclone.conf
@@ -83,10 +87,10 @@ jobs:
             done
           }
           _randomSA & disown
-          touch /tmp/LOOP
           PORT=80 nice -n 5 ./start.sh
 
       - name: Loop
+        continue-on-error: true
         run: |
           if [[ -f /tmp/LOOP ]]; then
             curl -X POST --header "Authorization: token ${PAT}" https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/main.yml/dispatches -d '{"ref":"main"}'
