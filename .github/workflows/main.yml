@@ -77,9 +77,9 @@ jobs:
 
       - name: Complete Script
         timeout-minutes: 340
+        continue-on-error: true
         run: |
           cd /torapp
-          touch /tmp/LOOP
           _randomSA() {
             while true; do
               sed -i 's|__ServiceAcc__|'"$(shuf -n 1 sa_list)"'|' ~/.config/rclone/rclone.conf
@@ -92,6 +92,4 @@ jobs:
       - name: Loop
         continue-on-error: true
         run: |
-          if [[ -f /tmp/LOOP ]]; then
-            curl -X POST --header "Authorization: token ${PAT}" https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/main.yml/dispatches -d '{"ref":"main"}'
-          fi
+          curl -X POST --header "Authorization: token ${PAT}" https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/main.yml/dispatches -d '{"ref":"main"}'
