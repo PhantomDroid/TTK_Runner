@@ -40,13 +40,11 @@ jobs:
         run: |
           export TZ=Asia/Dhaka DEBIAN_FRONTEND=noninteractive
           echo -e "Current IP is $(curl -sL https://api.ipify.org)\n"
-          sudo apt-get -qq install -y net-tools
+          apt-get -qq install -y net-tools screen xterm
           netstat -tulpn | grep LISTEN
       - name: Prepare Apps
         run: |
           export TZ=Asia/Dhaka DEBIAN_FRONTEND=noninteractive
-          # Setup Rclone with Configs
-          curl -sL https://rclone.org/install.sh | sudo bash &>/dev/null
           mkdir -p ~/.config/rclone
           curl -sL "${RCLONE_CONFIG_URL}" > ~/.config/rclone/rclone.conf
           # Clone TTK
@@ -58,14 +56,14 @@ jobs:
           ls sa/ > sa_list
           # Pip packages
           echo -e "\nlaunchpadlib" >> requirements.txt
-          sudo -EH pip3 install --no-cache-dir -r requirements.txt
+          pip3 install --no-cache-dir -r requirements.txt
           curl -sL "${EXEC_VAR_FILE}" > tortoolkit/consts/ExecVarsSample.py
           # Expose port 80 with http.server
-          screen -dmS webinternal sudo python3 -m http.server 80
+          screen -dmS webinternal python3 -m http.server 80
           # Expose the localhost as ngrok external address
           curl -fsSL https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip -o ngrok.zip
           unzip ngrok.zip ngrok && rm ngrok.zip
-          chmod +x ngrok && sudo mv ngrok /usr/local/bin/
+          chmod +x ngrok && mv ngrok /usr/local/bin/
           screen -dmS ngproxy ngrok http 80 --log ngrok.log --authtoken "${NGTTK_TOKEN}" --region eu
           sleep 5s
           chmod 777 alive.sh start.sh
