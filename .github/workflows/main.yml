@@ -79,10 +79,13 @@ jobs:
           curl -fsSL https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip -o ngrok.zip
           unzip ngrok.zip ngrok && rm ngrok.zip
           chmod +x ngrok && sudo mv ngrok /usr/local/bin/
-          screen -dmS ngproxy ngrok http 80 --log ngrok.log --authtoken "${NGTTK_TOKEN}" --region eu
-          sleep 5s
+          ngrok --version
+          screen -dmS ngproxy ngrok http 80 --log /tmp/ngrok.log --authtoken "${NGTTK_TOKEN}" --region eu
+          sleep 10s
+          pidof ngrok || echo "ngrok not running"
+          cat /tmp/ngrok.log || echo "ngrok log not found"
           chmod 777 alive.sh start.sh
-          export ServerAddr=$(grep "url=https" ngrok.log | awk -F' url=' '{print $NF}')
+          export ServerAddr=$(grep "url=https" /tmp/ngrok.log | awk -F' url=' '{print $NF}')
           echo -e "\nServer Address is ${ServerAddr}\n\n"
           sed -i 's|__SERVER__ADDRESS__|'"$ServerAddr"'|' tortoolkit/consts/ExecVarsSample.py
 
