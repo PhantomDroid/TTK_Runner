@@ -74,13 +74,13 @@ jobs:
           sudo -EH pip3 install --no-cache-dir -r requirements.txt
           curl -sL "${EXEC_VAR_FILE}" > tortoolkit/consts/ExecVarsSample.py
           # Expose port 80 with http.server
-          screen -dmS webinternal sudo python3 -m http.server 8081
+          #screen -dmS webinternal sudo python3 -m http.server 8081
           # Expose the localhost as ngrok external address
           curl -fsSL https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip -o ngrok.zip
           unzip ngrok.zip ngrok && rm ngrok.zip
           chmod +x ngrok && sudo mv ngrok /usr/local/bin/
           ngrok --version
-          screen -dmS ngproxy ngrok http 8082 --log /tmp/ngrok.log --authtoken "${NGTTK_TOKEN}" --region eu
+          screen -dmS ngproxy ngrok http 8080 --log /tmp/ngrok.log --authtoken "${NGTTK_TOKEN}" --region eu
           sleep 10s
           pidof ngrok || echo "ngrok not running"
           cat /tmp/ngrok.log || echo "ngrok log not found"
