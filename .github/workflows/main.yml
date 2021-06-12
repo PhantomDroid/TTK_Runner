@@ -28,6 +28,7 @@ jobs:
           --health-retries 3
         ports:
           - 5432:5432
+          - 8080:8080
 
     steps:
 
@@ -35,7 +36,7 @@ jobs:
         uses: rokibhasansagar/custom_workflows/git_config@main
       - name: SSH Keepalive
         uses: rokibhasansagar/custom_workflows/ssh_keepalive@main
-      #- uses: rokibhasansagar/slimhub_actions@main
+      - uses: rokibhasansagar/slimhub_actions@main
 
       - name: Checks
         run: |
@@ -63,7 +64,7 @@ jobs:
           mkdir -p ~/.config/rclone
           curl -sL "${RCLONE_CONFIG_URL}" > ~/.config/rclone/rclone.conf
           # Clone TTK
-          git clone https://github.com/yash-dk/TorToolkit-Telegram -b beta /torapp
+          git clone https://github.com/yash-dk/TorToolkit-Telegram -b master /torapp
           cd /torapp
           mkdir -p /torapp/{sa,tortk/files}
           git clone https://github.com/rokibhasansagar/RcloneSA4Phantom --depth 1
