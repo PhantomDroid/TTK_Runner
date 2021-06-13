@@ -66,7 +66,7 @@ jobs:
           unzip -q ngrok.zip ngrok && rm ngrok.zip
           chmod +x ngrok && sudo mv ngrok /usr/local/bin/
           ngrok --version
-          screen -dmS ngproxy ngrok http ${PORT} --log /tmp/ngrok.log --authtoken "${NGTTK_TOKEN}" --region eu
+          screen -dmS ngproxy ngrok http ${PORT} --log /tmp/ngrok.log --authtoken "${NGTTK_TOKEN}" --region us
           sleep 5s
           chmod 777 alive.sh start.sh
           export ServerAddr=$(grep "url=https" /tmp/ngrok.log | awk -F' url=' '{print $NF}')
