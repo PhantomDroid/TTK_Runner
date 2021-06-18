@@ -52,7 +52,7 @@ jobs:
           curl -sL https://rclone.org/install.sh | sudo bash &>/dev/null
           mkdir -p ~/.config/rclone && curl -sL "${RCLONE_CONFIG_URL}" > ~/.config/rclone/rclone.conf
           # Clone TTK
-          git clone https://github.com/yash-dk/TorToolkit-Telegram -b master /torapp
+          git clone https://github.com/yash-dk/TorToolkit-Telegram -b beta /torapp
           cd /torapp && mkdir -p /torapp/{sa,tortk/files}
           git clone https://github.com/rokibhasansagar/RcloneSA4Phantom --depth 1
           mv RcloneSA4Phantom/accounts/* sa/ && rm -rf RcloneSA4Phantom
