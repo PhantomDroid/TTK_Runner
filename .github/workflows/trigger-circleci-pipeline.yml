@@ -1,0 +1,17 @@
+name: Circle CI Trigger Cron
+
+on:
+  schedule:
+    - cron: '0 0,5,10,19 * * *'
+
+env:
+  CIRCLECI_TOKEN: ${{ secrets.CIRCLECI_TOKEN }}
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger TTK on CircleCI
+        run: |
+          curl -X POST --url "https://circleci.com/api/v2/project/gh/PhantomZone54/droid-builder_ssh/pipeline" --user "${CIRCLECI_TOKEN}:" --header "Content-Type: application/json" -d '{"branch":"circleci/ttk"}'
