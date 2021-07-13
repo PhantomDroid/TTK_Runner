@@ -2,7 +2,7 @@ name: Circle CI Trigger Cron
 
 on:
   schedule:
-    - cron: '0 0,5,10,19 * * *'
+    - cron: '0 0,5,10,15 * * *'
 
 env:
   CIRCLECI_TOKEN: ${{ secrets.CIRCLECI_TOKEN }}
