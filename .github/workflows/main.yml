@@ -84,7 +84,8 @@ jobs:
             done
           }
           _randomSA & disown
-          ./start.sh
+          ./start.sh &
+          while true; do printf "\n\n" && sleep 5m; done
 
       - name: Loop
         continue-on-error: true
