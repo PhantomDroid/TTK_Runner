@@ -44,14 +44,21 @@ jobs:
           # Prepare Base Folder
           sudo mkdir -p /torapp && sudo chown -R runner:docker /torapp && sudo chmod -R 777 /torapp
           # Get MegaSDKRest binary
-          curl -sL https://github.com/jaskaranSM/megasdkrest/releases/download/v0.1/megasdkrest -O
-          sudo mv megasdkrest /usr/local/bin/megasdkrest && sudo chmod +x /usr/local/bin/megasdkrest
+          curl -sL https://github.com/viswanathbalusu/megasdkrest/releases/download/v0.1.2/megasdkrest-amd64 -O
+          sudo mv megasdkrest-amd64 /usr/local/bin/megasdkrest && sudo chmod +x /usr/local/bin/megasdkrest
           # Setup Rclone with Configs
           curl -sL https://rclone.org/install.sh | sudo bash &>/dev/null
           mkdir -p ~/.config/rclone
           curl -H "Authorization: token ${PAT}" -H "Accept: application/vnd.github.v3.raw" "https://raw.githubusercontent.com/rokibhasansagar/random_gists/main/tortk/rclone.conf" > ~/.config/rclone/rclone.conf
+          # Expose the localhost as ngrok external address
+          curl -fsSL https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip -o ngrok.zip
+          unzip -q ngrok.zip ngrok && rm ngrok.zip
+          chmod +x ngrok && sudo mv ngrok /usr/local/bin/
+          ngrok --version
+          screen -dmS ngproxy ngrok http ${PORT} --log /tmp/ngrok.log --authtoken "${NGTTK_TOKEN}" --region us
+          sleep 5s
           # Clone TTK
-          git clone https://github.com/yash-dk/TorToolkit-Telegram -b beta /torapp
+          git clone https://github.com/yash-dk/TorToolkit-Telegram -b master /torapp
           cd /torapp && mkdir -p /torapp/{sa,tortk/files}
           git clone https://github.com/rokibhasansagar/RcloneSA4Phantom --depth 1
           mv RcloneSA4Phantom/accounts/* sa/ && rm -rf RcloneSA4Phantom
@@ -60,13 +67,6 @@ jobs:
           echo -e "\nlaunchpadlib" >> requirements.txt
           sudo -EH pip3 install --no-cache-dir -r requirements.txt
           curl -H "Authorization: token ${PAT}" -H "Accept: application/vnd.github.v3.raw" "https://raw.githubusercontent.com/rokibhasansagar/random_gists/main/tortk/ExecVarsSample.GHActions_ButlerBot.py" > tortoolkit/consts/ExecVarsSample.py
-          # Expose the localhost as ngrok external address
-          curl -fsSL https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip -o ngrok.zip
-          unzip -q ngrok.zip ngrok && rm ngrok.zip
-          chmod +x ngrok && sudo mv ngrok /usr/local/bin/
-          ngrok --version
-          screen -dmS ngproxy ngrok http ${PORT} --log /tmp/ngrok.log --authtoken "${NGTTK_TOKEN}" --region us
-          sleep 5s
           chmod 777 alive.sh start.sh
           export ServerAddr=$(grep "url=https" /tmp/ngrok.log | awk -F' url=' '{print $NF}')
           echo -e "\nServer Address is ${ServerAddr}\n\n"
