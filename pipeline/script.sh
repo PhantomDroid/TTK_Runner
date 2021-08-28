@@ -8,10 +8,10 @@ _checkIdentity() {
     printf "Running the script for %s...\n\n" "${Identity}"
     if [[ ${Identity} = "TLBot" ]]; then
       echo 'export NGToken="${NGToken_TLBot}"' >> $BASH_ENV
-      echo 'export ExecVars_Filename="ExecVarsSample.CircleCI_TLBot.py' >> $BASH_ENV
+      echo 'export ExecVars_Filename=ExecVarsSample.CircleCI_TLBot.py' >> $BASH_ENV
     elif [[ ${Identity} = "ButlerBot" ]]; then
       echo 'export NGToken="${NGToken_ButlerBot}"' >> $BASH_ENV
-      echo 'export ExecVars_Filename="ExecVarsSample.CircleCI_ButlerBot.py' >> $BASH_ENV
+      echo 'export ExecVars_Filename=ExecVarsSample.CircleCI_ButlerBot.py' >> $BASH_ENV
     fi
   else
     printf "Identity not found. Exiting...\n" && exit 1
@@ -54,10 +54,10 @@ _setWorkplace() {
   # Pip packages
   echo -e "\nlaunchpadlib" >> requirements.txt
   pip3 install --no-cache-dir -r requirements.txt 1>/dev/null
-  curl -H "Authorization: token ${GITHUB_TOKEN}" -H "Accept: application/vnd.github.v3.raw" "https://raw.githubusercontent.com/rokibhasansagar/random_gists/main/tortk/${ExecVars_Filename}" > tortoolkit/consts/ExecVarsSample.py
+  curl -sS -H "Authorization: token ${GITHUB_TOKEN}" -H "Accept: application/vnd.github.v3.raw" "https://raw.githubusercontent.com/rokibhasansagar/random_gists/main/tortk/${ExecVars_Filename}" > tortoolkit/consts/ExecVarsSample.py
   # Rclone config
   mkdir -p ~/.config/rclone
-  curl -H "Authorization: token ${GITHUB_TOKEN}" -H "Accept: application/vnd.github.v3.raw" "https://raw.githubusercontent.com/rokibhasansagar/random_gists/main/tortk/rclone.conf" > ~/.config/rclone/rclone.conf
+  curl -sS -H "Authorization: token ${GITHUB_TOKEN}" -H "Accept: application/vnd.github.v3.raw" "https://raw.githubusercontent.com/rokibhasansagar/random_gists/main/tortk/rclone.conf" > ~/.config/rclone/rclone.conf
   chmod 777 alive.sh start.sh
   sleep 5s
   # Get server address
