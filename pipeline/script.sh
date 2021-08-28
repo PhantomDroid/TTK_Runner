@@ -10,6 +10,7 @@ _checkIdentity() {
       export NGToken=${NGToken_TLBot} ExecVars_Filename="ExecVarsSample.CircleCI_TLBot.py"
     elif [[ ${Identity} = "ButlerBot" ]]; then
       export NGToken=${NGToken_ButlerBot} ExecVars_Filename="ExecVarsSample.CircleCI_ButlerBot.py"
+    fi
   else
     printf "Identity not found. Exiting...\n" && exit 1
   fi
