@@ -7,9 +7,11 @@ _checkIdentity() {
   if [[ ! -z ${Identity} ]]; then
     printf "Running the script for %s...\n\n" "${Identity}"
     if [[ ${Identity} = "TLBot" ]]; then
-      export NGToken=${NGToken_TLBot} ExecVars_Filename="ExecVarsSample.CircleCI_TLBot.py"
+      echo 'export NGToken="${NGToken_TLBot}"' >> $BASH_ENV
+      echo 'export ExecVars_Filename="ExecVarsSample.CircleCI_TLBot.py' >> $BASH_ENV
     elif [[ ${Identity} = "ButlerBot" ]]; then
-      export NGToken=${NGToken_ButlerBot} ExecVars_Filename="ExecVarsSample.CircleCI_ButlerBot.py"
+      echo 'export NGToken="${NGToken_ButlerBot}"' >> $BASH_ENV
+      echo 'export ExecVars_Filename="ExecVarsSample.CircleCI_ButlerBot.py' >> $BASH_ENV
     fi
   else
     printf "Identity not found. Exiting...\n" && exit 1
