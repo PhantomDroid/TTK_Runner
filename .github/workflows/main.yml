@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres
+        image: postgres:alpine
         env:
           POSTGRES_PASSWORD: postgres
         options: >-
@@ -44,7 +44,7 @@ jobs:
           # Prepare Base Folder
           sudo mkdir -p /torapp && sudo chown -R runner:docker /torapp && sudo chmod -R 777 /torapp
           # Get MegaSDKRest binary
-          curl -sL https://github.com/viswanathbalusu/megasdkrest/releases/download/v0.1.2/megasdkrest-amd64 -O
+          curl -sL https://github.com/viswanathbalusu/megasdkrest/releases/download/v0.1.4/megasdkrest-amd64 -O
           sudo mv megasdkrest-amd64 /usr/local/bin/megasdkrest && sudo chmod +x /usr/local/bin/megasdkrest
           # Setup Rclone with Configs
           curl -sL https://rclone.org/install.sh | sudo bash &>/dev/null
